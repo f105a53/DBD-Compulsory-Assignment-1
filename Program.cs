@@ -8,23 +8,37 @@ namespace DBD___Compulsory_Assignment_1
     {
         static void Main(string[] args)
         {
-            using (var sqlConnection = new SqlConnection(@"Server=mssql.jacobhinze.dk;Database=DB_SearchEngine;Enlist=False;User ID=mikkel;Password=eerrddff11,,;"))
+            using (var sqlConnection = new SqlConnection(@"Server=mssql.jacobhinze.dk;Database=Company;Enlist=False;User ID=mikkel;Password=eerrddff11,,;"))
             {
                 sqlConnection.Open();
                 using (var sqlCommand = new SqlCommand("EXECUTE dbo.usp_GetAllDepartments", sqlConnection))
                 {
-                    var reader = sqlCommand.ExecuteReader();
-                    var schemaTable = reader.GetSchemaTable();
-
-                    foreach (DataRow row in schemaTable.Rows)
+                    using (var reader = sqlCommand.ExecuteReader())
                     {
-                        foreach (DataColumn column in schemaTable.Columns)
-                        {
-                            Console.WriteLine($"{column.ColumnName} = {row[column]}");
-                        }
+                        PrintData(reader);
                     }
                 }
             }
+        }
+
+        private static void PrintData(SqlDataReader reader)
+        {
+            if (reader.HasRows)
+            {
+                while (reader.Read())
+                {
+                    for (var i = 0; i < reader.FieldCount; i++)
+                    {
+                        Console.Write(reader.GetValue(i) + "\t");
+                    }
+                    Console.WriteLine();
+                }
+            }
+            else
+            {
+                Console.WriteLine("No rows found.");
+            }
+            reader.Close();
         }
     }
 }
