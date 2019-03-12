@@ -1,7 +1,7 @@
 ﻿
 /*ALTER PROCEDURE dbo.usp_CreateDepartment 
     @DName NVARCHAR (50),
-    @MgrSSN NUMERIC (9)  
+    @MgrSSN NUMERIC (9, 0)  
 AS
     BEGIN
 		
@@ -23,6 +23,7 @@ GO
 */
 
 -- Assignment 1.B
+/*
 ALTER PROCEDURE dbo.usp_UpdateDepartmentName 
 	@DNumber INTEGER,
 	@DName NVARCHAR(50)
@@ -42,7 +43,45 @@ RETURN;
 GO
 EXEC dbo.usp_UpdateDepartmentName 6, 'test' -- Should throw Msg 50001
 GO
-SELECT * FROM Department WHERE DNumber = 6
+SELECT * FROM Department WHERE DNumber = 6 */
+
+-- Assignment 1.C (Untested)
+ALTER PROCEDURE dbo.usp_UpdateDepartmentManager 
+	@DNumber INTEGER,
+	@MgrSSN NUMERIC (9,0)
+AS
+	BEGIN
+		-- Throw exception if a record with the department number is not found in the department table
+		IF NOT EXISTS (SELECT 1 FROM Department WHERE DNumber = @DNumber)
+			THROW 50003, 'Department number does not exist!', 1;
+		-- Throw exception if manager already exists in department table
+		IF EXISTS (SELECT 1 FROM Department WHERE MgrSSN = @MgrSSN)
+			THROW 50002, 'Department manager already exists!', 1;
+
+		-- Update the manager for the record in the department table
+		UPDATE Department
+		SET MgrSSN = @MgrSSN, MgrStartDate = GETDATE() 
+		WHERE DNumber = @DNumber
+
+		-- Update all of the employee's who've had their manager changed,
+		-- except the employee record that is the manager in the employee table.
+		UPDATE Employee 
+		SET SuperSSN = @MgrSSN
+		WHERE Dno = @DNumber 
+			  AND NOT SSN = @MgrSSN
+
+		-- Set the updated managers SuperSSN to null
+		-- In order to prevent that the manager is managing himself.
+		UPDATE Employee
+		SET SuperSSN = NULL
+		WHERE SSN = @MgrSSN
+	END
+RETURN;
+
+GO
+EXEC dbo.usp_UpdateDepartmentManager 5, 987654321
+GO
+
 
 /*
 GO
@@ -84,3 +123,4 @@ AS
 GO
 EXECUTE dbo.usp_GetAllDepartments
 GO
+*/
