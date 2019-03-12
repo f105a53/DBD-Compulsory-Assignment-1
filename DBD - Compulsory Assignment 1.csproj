@@ -6,4 +6,8 @@
     <RootNamespace>DBD___Compulsory_Assignment_1</RootNamespace>
   </PropertyGroup>
 
+  <ItemGroup>
+    <PackageReference Include="System.Data.SqlClient" Version="4.6.0" />
+  </ItemGroup>
+
 </Project>
