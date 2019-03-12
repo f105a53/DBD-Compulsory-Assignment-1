@@ -123,4 +123,32 @@ AS
 GO
 EXECUTE dbo.usp_GetAllDepartments
 GO
+
+
+
+GO
+ALTER PROCEDURE dbo.usp_DeleteDepartment(@DNumberDelete INT)
+AS
+
+		IF EXISTS (SELECT 1 FROM Department WHERE DNumber = @DNumberDelete)		
+		BEGIN
+
+			--Declare table with all project numbers from the departrment that will be deleted
+			DECLARE @ProjectNoTbl TABLE (ProjectNo INTEGER);	
+			INSERT INTO @ProjectNoTbl (ProjectNo) (SELECT PNumber FROM Project WHERE DNum = @DNumberDelete)
+
+			--Delete everything ralated to the department
+			DELETE FROM Works_on WHERE Pno in (SELECT ProjectNo FROM @ProjectNoTbl);
+			DELETE FROM Project WHERE DNum = @DNumberDelete;
+			DELETE FROM Dept_Locations WHERE DNUmber = @DNumberDelete;
+			DELETE FROM Department WHERE DNumber = @DNumberDelete;
+			
+			UPDATE Employee SET Dno = NULL WHERE Dno = @DNumberDelete;
+			
+			END
+
+RETURN;
+
+GO
+EXEC dbo.usp_DeleteDepartment 4
 */
