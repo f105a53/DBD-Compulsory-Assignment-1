@@ -79,7 +79,7 @@ AS
 RETURN;
 
 GO
-EXEC dbo.usp_UpdateDepartmentManager 5, 987654321
+EXEC dbo.usp_UpdateDepartmentManager 5, 123456789
 GO
 
 
