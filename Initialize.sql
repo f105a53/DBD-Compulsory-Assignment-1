@@ -1,5 +1,4 @@
-﻿
-/*ALTER PROCEDURE dbo.usp_CreateDepartment 
+ALTER PROCEDURE dbo.usp_CreateDepartment 
     @DName NVARCHAR (50),
     @MgrSSN NUMERIC (9, 0)  
 AS
@@ -20,10 +19,10 @@ AS
 	END
 RETURN @DepNumber
 GO
-*/
+
 
 -- Assignment 1.B
-/*
+
 ALTER PROCEDURE dbo.usp_UpdateDepartmentName 
 	@DNumber INTEGER,
 	@DName NVARCHAR(50)
@@ -83,7 +82,7 @@ EXEC dbo.usp_UpdateDepartmentManager 5, 123456789
 GO
 
 
-/*
+
 GO
 EXEC dbo.usp_CreateDepartment 'Administration', 123456789
 GO
@@ -151,4 +150,3 @@ RETURN;
 
 GO
 EXEC dbo.usp_DeleteDepartment 4
-*/
