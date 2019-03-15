@@ -1,4 +1,15 @@
-ALTER PROCEDURE dbo.usp_CreateDepartment 
+-- Assignment 1.A
+GO
+IF EXISTS (
+SELECT *
+    FROM INFORMATION_SCHEMA.ROUTINES
+WHERE SPECIFIC_SCHEMA = N'dbo'
+    AND SPECIFIC_NAME = N'usp_CreateDepartment'
+    AND ROUTINE_TYPE = N'PROCEDURE'
+)
+DROP PROCEDURE dbo.usp_CreateDepartment
+GO
+CREATE PROCEDURE dbo.usp_CreateDepartment 
     @DName NVARCHAR (50),
     @MgrSSN NUMERIC (9, 0)  
 AS
@@ -18,12 +29,21 @@ AS
 		VALUES (@DepNumber, @DName, @MgrSSN, GETDATE())
 	END
 RETURN @DepNumber
-GO
+
 
 
 -- Assignment 1.B
-
-ALTER PROCEDURE dbo.usp_UpdateDepartmentName 
+GO
+IF EXISTS (
+SELECT *
+    FROM INFORMATION_SCHEMA.ROUTINES
+WHERE SPECIFIC_SCHEMA = N'dbo'
+    AND SPECIFIC_NAME = N'usp_UpdateDepartmentName'
+    AND ROUTINE_TYPE = N'PROCEDURE'
+)
+DROP PROCEDURE dbo.usp_UpdateDepartmentName
+GO
+CREATE PROCEDURE dbo.usp_UpdateDepartmentName 
 	@DNumber INTEGER,
 	@DName NVARCHAR(50)
 AS
@@ -38,14 +58,25 @@ AS
 		WHERE DNumber = @DNumber
 	END
 RETURN;
+--GO
+--EXEC dbo.usp_UpdateDepartmentName 6, 'test' -- Should throw Msg 50001
+--GO
+--SELECT * FROM Department WHERE DNumber = 6
 
-GO
-EXEC dbo.usp_UpdateDepartmentName 6, 'test' -- Should throw Msg 50001
-GO
-SELECT * FROM Department WHERE DNumber = 6 */
 
--- Assignment 1.C (Untested)
-ALTER PROCEDURE dbo.usp_UpdateDepartmentManager 
+
+-- Assignment 1.C
+GO
+IF EXISTS (
+SELECT *
+    FROM INFORMATION_SCHEMA.ROUTINES
+WHERE SPECIFIC_SCHEMA = N'dbo'
+    AND SPECIFIC_NAME = N'usp_UpdateDepartmentManager'
+    AND ROUTINE_TYPE = N'PROCEDURE'
+)
+DROP PROCEDURE dbo.usp_UpdateDepartmentManager
+GO
+CREATE PROCEDURE dbo.usp_UpdateDepartmentManager 
 	@DNumber INTEGER,
 	@MgrSSN NUMERIC (9,0)
 AS
@@ -76,57 +107,27 @@ AS
 		WHERE SSN = @MgrSSN
 	END
 RETURN;
+--GO
+--EXEC dbo.usp_UpdateDepartmentManager 5, 123456789
+--GO
+--EXEC dbo.usp_CreateDepartment 'Administration', 123456789
+--GO
+--SELECT * FROM Department WHERE DName = 'Administration'
 
+
+
+-- Assignment 1.D
 GO
-EXEC dbo.usp_UpdateDepartmentManager 5, 123456789
-GO
-
-
-
-GO
-EXEC dbo.usp_CreateDepartment 'Administration', 123456789
-GO
-SELECT * FROM Department WHERE DName = 'Administration'
-
---e
 IF EXISTS (
 SELECT *
     FROM INFORMATION_SCHEMA.ROUTINES
 WHERE SPECIFIC_SCHEMA = N'dbo'
-    AND SPECIFIC_NAME = N'usp_GetDepartment'
+    AND SPECIFIC_NAME = N'usp_DeleteDepartment'
     AND ROUTINE_TYPE = N'PROCEDURE'
 )
-DROP PROCEDURE dbo.usp_GetDepartment
+DROP PROCEDURE dbo.usp_DeleteDepartment
 GO
-CREATE PROCEDURE dbo.usp_GetDepartment
-    @DNo int
-AS
-    SELECT d.*, (SELECT Count(*) FROM Employee e WHERE e.Dno = d.DNumber) as EmployeeCount FROM Department d WHERE d.DNumber = @DNo
-GO
-EXECUTE dbo.usp_GetDepartment 1
-GO
-
---f
-IF EXISTS (
-SELECT *
-    FROM INFORMATION_SCHEMA.ROUTINES
-WHERE SPECIFIC_SCHEMA = N'dbo'
-    AND SPECIFIC_NAME = N'usp_GetAllDepartments'
-    AND ROUTINE_TYPE = N'PROCEDURE'
-)
-DROP PROCEDURE dbo.usp_GetAllDepartments
-GO
-CREATE PROCEDURE dbo.usp_GetAllDepartments
-AS
-    SELECT d.*, (SELECT Count(*) FROM Employee e WHERE e.Dno = d.DNumber) as EmployeeCount FROM Department d
-GO
-EXECUTE dbo.usp_GetAllDepartments
-GO
-
-
-
-GO
-ALTER PROCEDURE dbo.usp_DeleteDepartment(@DNumberDelete INT)
+CREATE PROCEDURE dbo.usp_DeleteDepartment(@DNumberDelete INT)
 AS
 
 		IF EXISTS (SELECT 1 FROM Department WHERE DNumber = @DNumberDelete)		
@@ -147,6 +148,45 @@ AS
 			END
 
 RETURN;
+--GO
+--EXEC dbo.usp_DeleteDepartment 4
 
+
+
+-- Assignment 1.E
 GO
-EXEC dbo.usp_DeleteDepartment 4
+IF EXISTS (
+SELECT *
+    FROM INFORMATION_SCHEMA.ROUTINES
+WHERE SPECIFIC_SCHEMA = N'dbo'
+    AND SPECIFIC_NAME = N'usp_GetDepartment'
+    AND ROUTINE_TYPE = N'PROCEDURE'
+)
+DROP PROCEDURE dbo.usp_GetDepartment
+GO
+CREATE PROCEDURE dbo.usp_GetDepartment
+    @DNo int
+AS
+    SELECT d.*, (SELECT Count(*) FROM Employee e WHERE e.Dno = d.DNumber) as EmployeeCount FROM Department d WHERE d.DNumber = @DNo
+
+--GO
+--EXECUTE dbo.usp_GetDepartment 1
+
+
+
+-- Assignment 1.F
+GO
+IF EXISTS (
+SELECT *
+    FROM INFORMATION_SCHEMA.ROUTINES
+WHERE SPECIFIC_SCHEMA = N'dbo'
+    AND SPECIFIC_NAME = N'usp_GetAllDepartments'
+    AND ROUTINE_TYPE = N'PROCEDURE'
+)
+DROP PROCEDURE dbo.usp_GetAllDepartments
+GO
+CREATE PROCEDURE dbo.usp_GetAllDepartments
+AS
+    SELECT d.*, (SELECT Count(*) FROM Employee e WHERE e.Dno = d.DNumber) as EmployeeCount FROM Department d
+--GO
+--EXECUTE dbo.usp_GetAllDepartments
