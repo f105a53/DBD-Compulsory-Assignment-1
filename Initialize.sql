@@ -104,7 +104,7 @@ AS
 		-- Set the updated managers SuperSSN to null
 		-- In order to prevent that the manager is managing himself.
 		UPDATE Employee
-		SET SuperSSN = NULL
+		SET SuperSSN = NULL, Dno = @DNumber
 		WHERE SSN = @MgrSSN
 	END
 RETURN;
@@ -142,10 +142,10 @@ AS
 			DELETE FROM Works_on WHERE Pno in (SELECT ProjectNo FROM @ProjectNoTbl);
 			DELETE FROM Project WHERE DNum = @DNumberDelete;
 			DELETE FROM Dept_Locations WHERE DNUmber = @DNumberDelete;
-			DELETE FROM Department WHERE DNumber = @DNumberDelete;
-			
+
 			UPDATE Employee SET Dno = NULL WHERE Dno = @DNumberDelete;
-			
+
+			DELETE FROM Department WHERE DNumber = @DNumberDelete;
 			END
 
 RETURN;
@@ -191,3 +191,8 @@ AS
     SELECT d.*, (SELECT Count(*) FROM Employee e WHERE e.Dno = d.DNumber) as EmployeeCount FROM Department d
 --GO
 --EXECUTE dbo.usp_GetAllDepartments
+
+
+--Calculated column
+ALTER TABLE dbo.Department
+ADD EmpCount AS (SELECT COUNT(*) FROM Employee LEFT JOIN Department ON Empoyee.Dno = Department.DNumber)

@@ -51,13 +51,18 @@ namespace DBD___Compulsory_Assignment_1
                     @"Server=mssql.jacobhinze.dk;Database=Company;Enlist=False;User ID=publicDB;Password=public;"))
             {
                 sqlConnection.Open();
+                Console.WriteLine("Before:");
                 PrintDepartments(sqlConnection);
+                Console.WriteLine("Create:");
                 CreateDepartment(sqlConnection);
                 PrintDepartments(sqlConnection);
+                Console.WriteLine("Update name:");
                 UpdateDepartmentName(sqlConnection);
                 PrintDepartment(sqlConnection, id);
+                Console.WriteLine("Update manager:");
                 UpdateDepartmentManager(sqlConnection);
                 PrintDepartment(sqlConnection, id);
+                Console.WriteLine("Delete:");
                 DeleteDepartment(sqlConnection);
                 PrintDepartments(sqlConnection);
                 sqlConnection.Close();
