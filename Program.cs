@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Data;
 using System.Data.SqlClient;
 
 namespace DBD___Compulsory_Assignment_1
@@ -10,26 +9,35 @@ namespace DBD___Compulsory_Assignment_1
 
         private static void CreateDepartment(SqlConnection sqlConnection)
         {
-            DataSet ds = new DataSet();
             using (var sqlCommand = new SqlCommand("EXEC dbo.usp_CreateDepartment 'Testing', 333445555", sqlConnection))
             {
-                //SqlDataAdapter sda = new SqlDataAdapter(sqlCommand);
-                //sda.Fill(ds);
-                //foreach (DataTable dataTable in ds.Tables) {
-                //    foreach (DataRow dataRow in dataTable.Rows) {
-                //        Console.WriteLine(dataRow["DName"].ToString());
-                //    }
-                
                 var result = sqlCommand.ExecuteScalar();
-                id = (int)result;
+                id = (int) result;
                 Console.WriteLine($"Created department with ID {id}");
             }
         }
-        }
+
 
         private static void DeleteDepartment(SqlConnection sqlConnection)
         {
-            using (var sqlCommand = new SqlCommand("EXEC dbo.usp_DeleteDepartment 4", sqlConnection))
+            using (var sqlCommand = new SqlCommand("EXEC dbo.usp_DeleteDepartment " + id, sqlConnection))
+            {
+                var rowsAffected = sqlCommand.ExecuteNonQuery();
+                Console.WriteLine($"{rowsAffected} row(s) affected");
+            }
+        }
+        private static void UpdateDepartmentName(SqlConnection sqlConnection)
+        {
+            using (var sqlCommand = new SqlCommand($"EXEC dbo.usp_UpdateDepartmentName {id}, 'TestingEdited'", sqlConnection))
+            {
+                var rowsAffected = sqlCommand.ExecuteNonQuery();
+                Console.WriteLine($"{rowsAffected} row(s) affected");
+            }
+        }
+
+        private static void UpdateDepartmentManager(SqlConnection sqlConnection)
+        {
+            using (var sqlCommand = new SqlCommand($"EXEC dbo.usp_UpdateDepartmentManager {id}, 453453453", sqlConnection))
             {
                 var rowsAffected = sqlCommand.ExecuteNonQuery();
                 Console.WriteLine($"{rowsAffected} row(s) affected");
@@ -45,6 +53,10 @@ namespace DBD___Compulsory_Assignment_1
                 sqlConnection.Open();
                 PrintDepartments(sqlConnection);
                 CreateDepartment(sqlConnection);
+                PrintDepartments(sqlConnection);
+                UpdateDepartmentName(sqlConnection);
+                PrintDepartment(sqlConnection, id);
+                UpdateDepartmentManager(sqlConnection);
                 PrintDepartment(sqlConnection, id);
                 DeleteDepartment(sqlConnection);
                 PrintDepartments(sqlConnection);

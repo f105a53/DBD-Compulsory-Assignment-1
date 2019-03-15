@@ -11,7 +11,7 @@ DROP PROCEDURE dbo.usp_CreateDepartment
 GO
 CREATE PROCEDURE dbo.usp_CreateDepartment 
     @DName NVARCHAR (50),
-    @MgrSSN NUMERIC (9, 0)  
+    @MgrSSN NUMERIC (9, 0)
 AS
     BEGIN
 		
@@ -27,11 +27,11 @@ AS
 		SET @DepNumber = (SELECT MAX(DNumber) + 1 FROM Department)
 		INSERT INTO Department(DNumber, DName, MgrSSN, MgrStartDate)
 		VALUES (@DepNumber, @DName, @MgrSSN, GETDATE())
-		RETURN @DepNumber
+		SELECT @DepNumber
 	END
 
 
-
+	
 
 -- Assignment 1.B
 GO
