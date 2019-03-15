@@ -189,10 +189,21 @@ GO
 CREATE PROCEDURE dbo.usp_GetAllDepartments
 AS
     SELECT d.*, (SELECT Count(*) FROM Employee e WHERE e.Dno = d.DNumber) as EmployeeCount FROM Department d
---GO
+GO
 --EXECUTE dbo.usp_GetAllDepartments
 
+GO
+CREATE FUNCTION usp_EmployeeCount (@DNumber INTEGER)
+	RETURNS INTEGER
+	AS BEGIN
+		DECLARE @EmpAmount INTEGER;
+
+		SELECT @EmpAmount = Count(*) FROM Employee e WHERE e.Dno = @DNumber
+
+		RETURN (@EmpAmount)
+	END
 
 --Calculated column
+GO
 ALTER TABLE dbo.Department
-ADD EmpCount AS (SELECT COUNT(*) FROM Employee LEFT JOIN Department ON Empoyee.Dno = Department.DNumber)
+ADD EmpCount AS (dbo.usp_EmployeeCount([DNumber]))
