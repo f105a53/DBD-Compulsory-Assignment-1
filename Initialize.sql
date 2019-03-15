@@ -27,8 +27,9 @@ AS
 		SET @DepNumber = (SELECT MAX(DNumber) + 1 FROM Department)
 		INSERT INTO Department(DNumber, DName, MgrSSN, MgrStartDate)
 		VALUES (@DepNumber, @DName, @MgrSSN, GETDATE())
+		RETURN @DepNumber
 	END
-RETURN @DepNumber
+
 
 
 

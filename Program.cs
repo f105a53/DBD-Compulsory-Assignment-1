@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Data;
 using System.Data.SqlClient;
 
 namespace DBD___Compulsory_Assignment_1
@@ -9,11 +10,21 @@ namespace DBD___Compulsory_Assignment_1
 
         private static void CreateDepartment(SqlConnection sqlConnection)
         {
-            using (var sqlCommand = new SqlCommand("EXEC dbo.usp_CreateDepartment 'Testing', 123456789", sqlConnection))
+            DataSet ds = new DataSet();
+            using (var sqlCommand = new SqlCommand("EXEC dbo.usp_CreateDepartment 'Testing', 333445555", sqlConnection))
             {
-                id = (int) sqlCommand.ExecuteScalar();
+                //SqlDataAdapter sda = new SqlDataAdapter(sqlCommand);
+                //sda.Fill(ds);
+                //foreach (DataTable dataTable in ds.Tables) {
+                //    foreach (DataRow dataRow in dataTable.Rows) {
+                //        Console.WriteLine(dataRow["DName"].ToString());
+                //    }
+                
+                var result = sqlCommand.ExecuteScalar();
+                id = (int)result;
                 Console.WriteLine($"Created department with ID {id}");
             }
+        }
         }
 
         private static void DeleteDepartment(SqlConnection sqlConnection)
